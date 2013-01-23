@@ -42,7 +42,9 @@ class RouteInspector
     html =~ /Application root<\/td><td class="value">([^>]+)</
     root_dir = $1.strip if $1
     if root_dir
-      route_table = `cd #{root_dir}; bundle exec rake routes`
+      cmd = "cd #{root_dir}; bundle exec rake routes"
+      cmd.gsub!(File::SEPARATOR, File::ALT_SEPARATOR) if File::ALT_SEPARATOR
+      route_table = `#{cmd}`
       return RouteInspector.new(route_table)
     end
   end
